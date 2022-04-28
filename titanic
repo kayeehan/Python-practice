@@ -64,5 +64,4 @@ for factor in iqr_factor:
     print(f'\n{Fore.GREEN}TOTAL OUTLIERS FOR {factor} IQR : {count}{Style.RESET_ALL}')
     print('')
     
-    test
-    ===================================================
+ 
