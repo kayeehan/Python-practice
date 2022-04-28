@@ -1,0 +1,65 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from scipy.stats import skew
+import math
+import warnings
+warnings.filterwarnings('ignore')
+
+from colorama import Fore, Style
+from yellowbrick.style import set_palette
+set_palette('flatui')
+
+train_data = pd.read_csv('c:/data_bigdata/titanic_train.csv')
+train_data.info()
+
+train_data.shape, train_data.size
+train.isnull().sum()
+'''PassengerId      0
+Survived         0
+Pclass           0
+Name             0
+Sex              0
+Age            177
+SibSp            0
+Parch            0
+Ticket           0
+Fare             0
+Cabin          687
+Embarked         2'''
+train_data.duplicated().sum() #중복된 항목 확인
+train_data.nunique()
+
+a = train_data[train_data.Survived==0].iloc[:,2:].describe().style.background_gradient(cmap='twilight_r')
+display(a)
+a.set_properties()
+with open('c:/data_bigdata/test_1.html','w') as file:
+    a.to_html(file)
+
+sns.heatmap(abs(train.corr()),annot=True,cmap='viridis')
+
+iqr_factor = [1.5, 2]
+list1, list2 = [], []
+
+for factor in iqr_factor:
+    count = 0
+    print(f'Outliers for {factor} IQR :')
+    print('-------------------------------------')
+    for col in train_data.select_dtypes(['int64', 'float64']):
+       
+        IQR = train_data[col].quantile(0.75) - train_data[col].quantile(0.25)
+        lower_lim = train_data[col].quantile(0.25) - factor*IQR
+        upper_lim = train_data[col].quantile(0.75) + factor*IQR
+    
+        cond = train_data[(train_data[col] < lower_lim) | (train_data[col] > upper_lim)].shape[0]
+        
+        if cond > 0 and factor == 1.5:
+            list1.append(train_data[(train_data[col] < lower_lim) | (train_data[col] > upper_lim)].index.tolist())
+        elif cond > 0 and factor == 2:
+            list2.append(train_data[(train_data[col] < lower_lim) | (train_data[col] > upper_lim)].index.tolist())
+        
+        if cond > 0: print(f'{col:<30} : ', cond); count += cond
+    print(f'\n{Fore.GREEN}TOTAL OUTLIERS FOR {factor} IQR : {count}{Style.RESET_ALL}')
+    print('')
