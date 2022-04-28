@@ -63,3 +63,6 @@ for factor in iqr_factor:
         if cond > 0: print(f'{col:<30} : ', cond); count += cond
     print(f'\n{Fore.GREEN}TOTAL OUTLIERS FOR {factor} IQR : {count}{Style.RESET_ALL}')
     print('')
+    
+    test
+    ===================================================
